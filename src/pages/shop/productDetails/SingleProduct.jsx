@@ -62,6 +62,32 @@ const SingleProduct = () => {
     const oldPrice = singleProduct.oldPrice ? singleProduct.oldPrice * exchangeRate : null;
     const discountPercentage = oldPrice ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0;
 
+    // Format description with proper Arabic text rendering
+    const formatDescription = (desc) => {
+        if (!desc) return null;
+        
+        // If description contains bullet points or new lines
+        if (desc.includes('•') || desc.includes('\n')) {
+            const lines = desc.split(/\n|•/).filter(line => line.trim() !== '');
+            return (
+                <ul className="list-disc pr-5 space-y-2">
+                    {lines.map((line, index) => (
+                        <li key={index} className="text-gray-600 text-right" dir="rtl">
+                            {line.trim()}
+                        </li>
+                    ))}
+                </ul>
+            );
+        }
+        
+        // Regular paragraph
+        return (
+            <p className="text-gray-600 text-right" dir="rtl">
+                {desc}
+            </p>
+        );
+    };
+
     return (
         <>
             <section className='section__container bg-[#e2e5e5]'>
@@ -139,10 +165,10 @@ const SingleProduct = () => {
                                 <span className="text-gray-600">{singleProduct.category}</span>
                             </p>
                         </div>
-                        <p className="text-gray-500 mb-4 text-lg font-medium leading-relaxed">
+                        <div className="text-gray-500 mb-4 text-lg font-medium leading-relaxed">
                             <span className="text-gray-800 font-bold block">الوصف:</span> 
-                            <span className="text-gray-600">{singleProduct.description}</span>
-                        </p>
+                            {formatDescription(singleProduct.description)}
+                        </div>
 
                         <button
                             onClick={(e) => {
